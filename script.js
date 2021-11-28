@@ -1,16 +1,9 @@
-let title;
-let screens;
-let screenPrice;
-let rollback;
-let fullPrice;
-let adaptive;
-
-title = "JS course";
-screens = "Простые, Сложные, Интерактивные";
-screenPrice = 180;
-rollback = 20;
-fullPrice = 450;
-adaptive = true;
+let title = "JS course";
+let screens = "Простые, Сложные, Интерактивные";
+let screenPrice = 180;
+let rollback = 20;
+let fullPrice = 450;
+let adaptive = true;
 
 console.log(typeof title);
 console.log(typeof fullPrice);
