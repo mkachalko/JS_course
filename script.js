@@ -1,101 +1,99 @@
 "use strict";
 
-let title;
-let screens;
-let screenPrice;
-let rollback = 20;
-let adaptive;
-let service1;
-let servicePrice;
-let allServicePrices, fullPrice, servicePercentPrice, rollbackSum;
+const appData = {
+  title: "",
+  screens: "",
+  screenPrice: 0,
+  rollback: 20,
+  adaptive: true,
+  service1: "",
+  servicePrice: 0,
+  allServicePrices: 0, 
+  fullPrice: 0, 
+  servicePercentPrice: 0, 
+  rollbackSum: 0,
+  isNumber: function (num) {
+    return !isNaN(parseFloat(num)) && isFinite(num) && num !== null;
+  },
+  asking: function () {
+    appData.title = prompt("Как называется ваш проект?");
+    appData.screens = prompt(
+      "Какие типы экранов нужно разработать?",
+      "Простые, Сложные, Интерактивные"
+    );
+    do {
+      appData.screenPrice = prompt("Сколько будет стоить данная работа");
+    } while (!appData.isNumber(appData.screenPrice));
+    appData.screenPrice = +appData.screenPrice; // после проверки записываем в переменную число
 
-const isNumber = function (num) {
-  return !isNaN(parseFloat(num)) && isFinite(num) && num !== null;
-};
-
-const asking = function () {
-  title = prompt("Как называется ваш проект?");
-  screens = prompt(
-    "Какие типы экранов нужно разработать?",
-    "Простые, Сложные, Интерактивные"
-  );
-  do {
-    screenPrice = prompt("Сколько будет стоить данная работа");
-  } while (!isNumber(screenPrice));
-  screenPrice = +screenPrice; // после проверки записываем в переменную число
-
-  adaptive = confirm("Нужен ли адаптив на сайте?");
-};
-
-const showTypeOf = function (variable) {
-  console.log(variable, typeof variable);
-};
-
-const getRollbackMessage = function (price) {
-  switch (true) {
-    case price >= 30000:
-      return "Даем скидку в 10%";
-    case price >= 15000 && price < 30000:
-      return "Даем скидку в 5%";
-    case price >= 0 && price < 15000:
-      return "Скидка не предусмотрена";
-    default:
-      return "Что то пошло не так";
-  }
-};
-
-const getAllServicePrices = function () {
-  let sum = 0;
-
-  for (let i = 0; i < 2; i++) {
-    service1 = prompt("Какой дополнительный тип услуги нужен?");
-    servicePrice = prompt("Сколько это будет стоить?");
-
-    while (!isNumber(servicePrice)) {
-      servicePrice = prompt("Сколько это будет стоить?");
+    appData.adaptive = confirm("Нужен ли адаптив на сайте?");
+  },
+  getRollbackMessage: function (price) {
+    switch (true) {
+      case price >= 30000:
+        return "Даем скидку в 10%";
+      case price >= 15000 && price < 30000:
+        return "Даем скидку в 5%";
+      case price >= 0 && price < 15000:
+        return "Скидка не предусмотрена";
+      default:
+        return "Что то пошло не так";
     }
-    servicePrice = +servicePrice; // после проверки записываем в переменную число
-    sum += servicePrice;
+  },
+  getAllServicePrices: function () {
+    let sum = 0;
+
+    for (let i = 0; i < 2; i++) {
+      appData.service1 = prompt("Какой дополнительный тип услуги нужен?");
+      appData.servicePrice = prompt("Сколько это будет стоить?");
+
+      while (!appData.isNumber(appData.servicePrice)) {
+        appData.servicePrice = prompt("Сколько это будет стоить?");
+      }
+      appData.servicePrice = +appData.servicePrice; // после проверки записываем в переменную число
+      sum += appData.servicePrice;
+    }
+
+    return sum;
+  },
+  getFullPrice: function (screen, service) {
+    return screen + service;
+  },
+  getTitle: function (ttl) {
+    ttl = ttl.trim();
+    return ttl[0].toUpperCase() + ttl.substring(1).toLowerCase();
+  },
+  getServicePercentPrices: function (foo, rollb) {
+    return foo - rollb;
+  },
+  start: function () {
+    appData.asking();
+
+    appData.allServicePrices = appData.getAllServicePrices();
+    appData.fullPrice = appData.getFullPrice(appData.screenPrice, appData.allServicePrices);
+    appData.rollbackSum = appData.fullPrice * (appData.rollback / 100);
+    appData.servicePercentPrice = appData.getServicePercentPrices(appData.fullPrice, appData.rollbackSum);
+    appData.title = appData.getTitle(appData.title);
+
+    appData.logger();
+  },
+  logger: function () {
+    console.log(appData.screens.split(", "));
+    console.log(appData.getRollbackMessage(appData.fullPrice));
+    console.log(appData.servicePercentPrice);
+
+    for (let key in appData) {
+      console.log(key);
+    }
+    // Проверка
+    console.log(appData.allServicePrices);
+    console.log(appData.fullPrice);
+    console.log(appData.title);
+    console.log(appData.servicePercentPrice);
+    
   }
 
-  return sum;
 };
 
-function getFullPrice(screen, service) {
-  return screen + service;
-}
+appData.start();
 
-const getTitle = function (ttl) {
-  ttl = ttl.trim();
-  return ttl[0].toUpperCase() + ttl.substring(1).toLowerCase();
-};
-
-function getServicePercentPrices(foo, rollb) {
-  return foo - rollb;
-}
-
-asking();
-
-allServicePrices = getAllServicePrices();
-fullPrice = getFullPrice(screenPrice, allServicePrices);
-rollbackSum = fullPrice * (rollback / 100);
-servicePercentPrice = getServicePercentPrices(fullPrice, rollbackSum);
-title = getTitle(title);
-
-showTypeOf(title);
-showTypeOf(fullPrice);
-showTypeOf(adaptive);
-
-console.log(screens.split(", "));
-console.log(getRollbackMessage(fullPrice));
-console.log(servicePercentPrice);
-
-// Проверка
-// console.log(allServicePrices);
-// console.log(fullPrice);
-// console.log(title);
-// console.log(servicePercentPrice);
-// showTypeOf(allServicePrices);
-// showTypeOf(fullPrice);
-// showTypeOf(rollbackSum);
-// showTypeOf(servicePercentPrice);
