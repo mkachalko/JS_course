@@ -60,7 +60,11 @@ const appData = {
 
       price = +price; // после проверки записываем в переменную число
 
-      appData.services[i + " " + name] = price;
+      if (name in appData.services) {
+        appData.services[name + i] = price;
+      } else {
+        appData.services[name] = price;
+      }
     }
   },
   addPrices: function () {
